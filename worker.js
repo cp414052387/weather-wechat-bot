@@ -1,8 +1,4 @@
 // worker.js
-const API_KEY = "df7577d99eaa4051803df861f22ec4a8";
-const CITY = "贵阳市白云区";
-const WEBHOOK_KEY = "d294ce3a-2281-496b-8649-bad1d2c3c7d8";
-const SEND_TIME = "07:58"; // Cloudflare Workers 定时触发器使用 UTC 时间
 
 async function getWeather(apiKey, city) {
   const locationUrl = `https://geoapi.qweather.com/v2/city/lookup?key=${apiKey}&location=${encodeURIComponent(city)}`;
@@ -65,15 +61,15 @@ async function sendMessage(message, webhookKey) {
   }
 }
 
+addEventListener("scheduled", (event) => {
+  event.waitUntil(handleScheduled(event));
+});
+
 async function handleScheduled(event) {
     try {
-      const weatherInfo = await getWeather(API_KEY, CITY);
-      await sendMessage(weatherInfo, WEBHOOK_KEY)
+      const weatherInfo = await getWeather(env.API_KEY, env.CITY);
+      await sendMessage(weatherInfo, env.WEBHOOK_KEY)
     } catch (e) {
         console.error("Error:", e)
     }
 }
-
-addEventListener("scheduled", (event) => {
-  event.waitUntil(handleScheduled(event));
-});
