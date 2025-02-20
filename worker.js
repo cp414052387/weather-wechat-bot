@@ -56,7 +56,7 @@ async function sendMessage(message, webhookKey) {
       return false;
     }
   } else {
-    console.log(`请求失败，状态码：${response.status_code}`);
+    console.log(`请求失败，状态码：${response.status}`);
     return false;
   }
 }
